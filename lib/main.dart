@@ -1,4 +1,5 @@
-import 'package:chatt/ui/auth/login_screen.dart';
+import 'package:chatt/ui/pages/login_screen.dart';
+import 'package:chatt/ui/pages/registration_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import './firebase_options.dart';
@@ -24,7 +25,7 @@ class MyApp extends StatelessWidget {
         primaryColor: Color.fromARGB(42, 117, 188, 1),
         backgroundColor: Color.fromARGB(28, 27, 27, 1),
       ),
-      home: const loginpage(),
+      home: const registrationPage(),
     );
   }
 }
