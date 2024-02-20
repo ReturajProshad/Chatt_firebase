@@ -1,4 +1,5 @@
 // ignore_for_file: unused_field, non_constant_identifier_names
+import 'package:chatt/ui/services/navigation_services.dart';
 import 'package:chatt/ui/services/snackBar_service.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -166,7 +167,9 @@ class _loginpageState extends State<loginpage> {
 
   Widget _registerButton() {
     return GestureDetector(
-      onTap: () {},
+      onTap: () {
+        navigationService.instance.navigateToPage("register");
+      },
       child: Container(
         height: _deviceHeight * .06,
         width: _deviceWidth,

@@ -1,5 +1,10 @@
+import 'dart:io';
+
+import 'package:chatt/ui/services/media_services.dart';
+import 'package:chatt/ui/services/navigation_services.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:image_picker/image_picker.dart';
 
 class registrationPage extends StatefulWidget {
   const registrationPage({super.key});
@@ -12,6 +17,8 @@ class _registrationPageState extends State<registrationPage> {
   late double _deviceHeight;
   late double _deviceWidth;
   late GlobalKey<FormState> _formKey;
+  late XFile? _image = null;
+  bool isImageSelected = false;
   @override
   void initState() {
     _formKey = GlobalKey<FormState>();
@@ -24,14 +31,21 @@ class _registrationPageState extends State<registrationPage> {
     _deviceWidth = MediaQuery.of(context).size.width;
     return Scaffold(
       backgroundColor: Theme.of(context).backgroundColor,
-      body: Container(
-        alignment: Alignment.center,
-        child: _signupUi(),
+      body: SingleChildScrollView(
+        child: Container(
+          alignment: Alignment.center,
+          child: Column(children: [
+            SizedBox(
+              height: _deviceHeight * .15,
+            ),
+            _registrationPageUI(),
+          ]),
+        ),
       ),
     );
   }
 
-  Widget _signupUi() {
+  Widget _registrationPageUI() {
     return Container(
       height: _deviceHeight * 0.75,
       padding: EdgeInsets.symmetric(horizontal: _deviceWidth * .10),
@@ -43,6 +57,8 @@ class _registrationPageState extends State<registrationPage> {
         children: [
           _headingWidget(),
           _inputForm(),
+          _registerButton(),
+          _backToLogin(),
         ],
       ),
     );
@@ -83,6 +99,9 @@ class _registrationPageState extends State<registrationPage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             _imageSelector(),
+            _nameTextField(),
+            _emailTextField(),
+            _passwordTextField(),
           ],
         ),
       ),
@@ -90,20 +109,128 @@ class _registrationPageState extends State<registrationPage> {
   }
 
   Widget _imageSelector() {
-    return Align(
-      alignment: Alignment.center,
-      child: Container(
-        height: _deviceHeight * .10,
-        width: _deviceHeight * .10,
-        decoration: BoxDecoration(
-          color: Colors.transparent,
-          borderRadius: BorderRadius.circular(1000),
-          image: const DecorationImage(
-            fit: BoxFit.cover,
-            image: NetworkImage(
-                "https://cdn.vectorstock.com/i/1000x1000/17/61/select-image-vector-11591761.webp"),
+    return GestureDetector(
+      onTap: () async {
+        XFile? _imageSelect = await mediaServices.instance.getImageFromFile();
+        setState(() {
+          _image = _imageSelect;
+        });
+      },
+      child: Align(
+        alignment: Alignment.center,
+        child: Container(
+          height: _deviceHeight * .10,
+          width: _deviceHeight * .10,
+          decoration: BoxDecoration(
+            color: Colors.transparent,
+            borderRadius: BorderRadius.circular(1000),
+            image: _image != null
+                ? DecorationImage(
+                    fit: BoxFit.cover,
+                    image: FileImage(
+                      File(_image!.path),
+                    ),
+                  )
+                : DecorationImage(
+                    fit: BoxFit.cover,
+                    image: NetworkImage(
+                        "https://cdn.vectorstock.com/i/1000x1000/17/61/select-image-vector-11591761.webp"),
+                  ),
           ),
         ),
+      ),
+    );
+  }
+
+  Widget _nameTextField() {
+    return TextFormField(
+      autocorrect: false,
+      style: TextStyle(color: Colors.white),
+      validator: (_input) {
+        return _input!.length != 0 ? null : "Please enter your name";
+      },
+      onSaved: (_input) {
+        setState(() {});
+      },
+      cursorColor: Colors.white,
+      decoration: const InputDecoration(
+        hintText: "Enter Your Name",
+        focusedBorder: UnderlineInputBorder(
+          borderSide: BorderSide(color: Colors.white),
+        ),
+      ),
+    );
+  }
+
+  Widget _emailTextField() {
+    return TextFormField(
+      autocorrect: false,
+      style: TextStyle(color: Colors.white),
+      validator: (_input) {
+        return _input!.length != 0 && _input.contains('@')
+            ? null
+            : "Please enter a valid email";
+      },
+      onSaved: (_input) {
+        setState(() {});
+      },
+      cursorColor: Colors.white,
+      decoration: const InputDecoration(
+        hintText: "Enter Your Email",
+        focusedBorder: UnderlineInputBorder(
+          borderSide: BorderSide(color: Colors.white),
+        ),
+      ),
+    );
+  }
+
+  Widget _passwordTextField() {
+    return TextFormField(
+      autocorrect: false,
+      obscureText: true,
+      style: TextStyle(color: Colors.white),
+      validator: (_input) {
+        return _input!.length != 0 ? null : "Please enter a valid password";
+      },
+      onSaved: (_input) {
+        setState(() {});
+      },
+      cursorColor: Colors.white,
+      decoration: const InputDecoration(
+        hintText: "Enter a password",
+        focusedBorder: UnderlineInputBorder(
+          borderSide: BorderSide(color: Colors.white),
+        ),
+      ),
+    );
+  }
+
+  Widget _registerButton() {
+    return Container(
+      height: _deviceHeight * .06,
+      width: _deviceWidth,
+      child: MaterialButton(
+        onPressed: () {
+          //setState(() {});
+        },
+        color: Colors.blue,
+        child: const Text(
+          "Register",
+          style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
+        ),
+      ),
+    );
+  }
+
+  Widget _backToLogin() {
+    return GestureDetector(
+      onTap: () {
+        navigationService.instance.goBack();
+      },
+      child: Container(
+        height: _deviceHeight * .06,
+        width: _deviceWidth,
+        child: const Icon(Icons.arrow_back),
       ),
     );
   }
