@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1021996917870",
+    "project_id": "chatify-realtime-d4bd4",
+    "storage_bucket": "chatify-realtime-d4bd4.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1021996917870:android:0e6a80150a49775ecab27f",
+        "android_client_info": {
+          "package_name": "com.example.chatt"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA0ooyJmDux1Z6104wBirQ9KWs6kT3C7hc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
