@@ -1,4 +1,5 @@
 // ignore_for_file: constant_identifier_names
+import 'package:chatt/ui/services/snackBar_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -18,8 +19,8 @@ class AuthProvider extends ChangeNotifier {
   AuthProvider() {
     _auth = FirebaseAuth.instance;
     user = _auth.currentUser;
-    //status =
-    //user != null ? AuthStatus.Authenticated : AuthStatus.NotAuthenticated;
+    status =
+        user != null ? AuthStatus.Authenticated : AuthStatus.NotAuthenticated;
   }
 
   Future<void> loginWithE_P(String _Email, String _Password) async {
@@ -30,11 +31,13 @@ class AuthProvider extends ChangeNotifier {
           email: _Email, password: _Password);
       user = _result.user;
       status = AuthStatus.Authenticated;
-      print('success login');
+      snackBarService.instance.LoginSuccess("Welcome ${user?.email}");
+      //print('success login');
       //navigate to homepage
     } catch (e) {
       status = AuthStatus.Error;
-      print('faild login');
+      snackBarService.instance.LoginError("Faild Login");
+      //print('faild login');
       //display Error
     }
     notifyListeners();

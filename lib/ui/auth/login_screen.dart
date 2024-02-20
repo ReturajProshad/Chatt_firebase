@@ -1,4 +1,5 @@
 // ignore_for_file: unused_field, non_constant_identifier_names
+import 'package:chatt/ui/services/snackBar_service.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../provider/auth_provider.dart';
@@ -36,8 +37,9 @@ class _loginpageState extends State<loginpage> {
 
   Widget _loginUi() {
     return Builder(builder: (BuildContext _context) {
+      snackBarService.instance.thisContext = _context;
       _auth = Provider.of<AuthProvider>(_context);
-      print(_auth.user);
+      //print(_auth.user);
       return Container(
         height: _deviceHeight * .60,
         padding: EdgeInsets.symmetric(horizontal: _deviceWidth * .10),
@@ -131,7 +133,7 @@ class _loginpageState extends State<loginpage> {
 
   Widget _loginButton() {
     return _auth.status == AuthStatus.Authenticating
-        ? Align(
+        ? const Align(
             alignment: Alignment.center,
             child: CircularProgressIndicator(),
           )
