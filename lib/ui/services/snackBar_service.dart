@@ -10,26 +10,14 @@ class snackBarService {
     _thiscontext = _context;
   }
 
-  void LoginError(String _message) {
+  void LoginStatusMessage(String _message, Color ColorOfS) {
     ScaffoldMessenger.of(_thiscontext).showSnackBar(
       SnackBar(
         content: Text(
           _message,
           style: const TextStyle(color: Colors.white, fontSize: 10),
         ),
-        backgroundColor: Colors.red,
-      ),
-    );
-  }
-
-  void LoginSuccess(String _message) {
-    ScaffoldMessenger.of(_thiscontext).showSnackBar(
-      SnackBar(
-        content: Text(
-          _message,
-          style: const TextStyle(color: Colors.white, fontSize: 10),
-        ),
-        backgroundColor: Colors.green,
+        backgroundColor: ColorOfS,
       ),
     );
   }

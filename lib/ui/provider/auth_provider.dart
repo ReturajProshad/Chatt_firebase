@@ -31,12 +31,13 @@ class AuthProvider extends ChangeNotifier {
           email: _Email, password: _Password);
       user = _result.user;
       status = AuthStatus.Authenticated;
-      snackBarService.instance.LoginSuccess("Welcome ${user?.email}");
+      snackBarService.instance
+          .LoginStatusMessage("Welcome ${user?.email}", Colors.green);
       //print('success login');
       //navigate to homepage
     } catch (e) {
       status = AuthStatus.Error;
-      snackBarService.instance.LoginError("Faild Login");
+      snackBarService.instance.LoginStatusMessage("Login Error", Colors.red);
       //print('faild login');
       //display Error
     }

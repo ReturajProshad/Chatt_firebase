@@ -148,6 +148,10 @@ class _loginpageState extends State<loginpage> {
                 print(_Password);
                 if (verifyEmail(_Email) && varifyPass(_Password)) {
                   _auth.loginWithE_P(_Email, _Password);
+                } else {
+                  snackBarService.instance.LoginStatusMessage(
+                      "Please Enter Valid Email And Password",
+                      Colors.transparent);
                 }
                 //setState(() {});
               },
