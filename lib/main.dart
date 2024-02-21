@@ -1,10 +1,10 @@
 import 'package:chatt/ui/pages/login_screen.dart';
 import 'package:chatt/ui/pages/registration_screen.dart';
+import 'package:chatt/ui/services/DB_service.dart';
 import 'package:chatt/ui/services/navigation_services.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import './firebase_options.dart';
-import './ui/services/navigation_services.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -17,9 +17,10 @@ void main() async {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    // dbService.instance
+    //    .createUser("NewUser", "Returaj", ".jpg", "Returaj@gmail.com");
     return MaterialApp(
       title: 'Chatify',
       navigatorKey: navigationService.instance.navigatorkey,

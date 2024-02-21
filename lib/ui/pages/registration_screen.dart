@@ -13,6 +13,7 @@ class registrationPage extends StatefulWidget {
   State<registrationPage> createState() => _registrationPageState();
 }
 
+// ignore: camel_case_types
 class _registrationPageState extends State<registrationPage> {
   late double _deviceHeight;
   late double _deviceWidth;
@@ -25,10 +26,15 @@ class _registrationPageState extends State<registrationPage> {
     super.initState();
   }
 
+  late String _email;
+  late String _name;
+  late String _password;
+
   @override
   Widget build(BuildContext context) {
     _deviceHeight = MediaQuery.of(context).size.height;
     _deviceWidth = MediaQuery.of(context).size.width;
+
     return Scaffold(
       backgroundColor: Theme.of(context).backgroundColor,
       body: SingleChildScrollView(
@@ -150,7 +156,9 @@ class _registrationPageState extends State<registrationPage> {
         return _input!.length != 0 ? null : "Please enter your name";
       },
       onSaved: (_input) {
-        setState(() {});
+        setState(() {
+          _name = _input!;
+        });
       },
       cursorColor: Colors.white,
       decoration: const InputDecoration(
@@ -172,7 +180,9 @@ class _registrationPageState extends State<registrationPage> {
             : "Please enter a valid email";
       },
       onSaved: (_input) {
-        setState(() {});
+        setState(() {
+          _email = _input!;
+        });
       },
       cursorColor: Colors.white,
       decoration: const InputDecoration(
@@ -193,7 +203,9 @@ class _registrationPageState extends State<registrationPage> {
         return _input!.length != 0 ? null : "Please enter a valid password";
       },
       onSaved: (_input) {
-        setState(() {});
+        setState(() {
+          _password = _input!;
+        });
       },
       cursorColor: Colors.white,
       decoration: const InputDecoration(
