@@ -7,7 +7,7 @@ class dbService {
   dbService() {
     _db = FirebaseFirestore.instance;
   }
-  String userCollection = "User";
+  String userCollection = "Users";
   Future<void> createUser(
       String _uId, String _userName, String _image, String _uEmail) async {
     try {
