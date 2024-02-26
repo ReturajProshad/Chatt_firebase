@@ -6,15 +6,28 @@ class CloudStorageService {
   FirebaseStorage? _storage;
   Reference? _baseRef;
   String _profileImages = "Profile_images";
+
   CloudStorageService() {
     _storage = FirebaseStorage.instance;
     _baseRef = _storage!.ref();
   }
-  Future<TaskSnapshot>? uploadUserImage(String _uId, File _image) {
+
+  Future<TaskSnapshot?> uploadUserImage(String _uId, File _image) async {
     try {
-      return _baseRef!.child(_profileImages).child(_uId).putFile(_image);
+      // Get the file extension
+      String fileExtension = _image.path.split('.').last;
+
+      // Generate a unique filename for the image
+      String filename = '$_uId.$fileExtension';
+
+      // Upload the image to Firebase Storage
+      return await _baseRef!
+          .child(_profileImages)
+          .child(filename)
+          .putFile(_image);
     } catch (e) {
       print(e);
+      return null;
     }
   }
 }

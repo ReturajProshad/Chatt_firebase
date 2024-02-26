@@ -62,7 +62,9 @@ class AuthProvider extends ChangeNotifier {
       //navigate to homescreen
     } catch (e) {
       print(e);
+      status = AuthStatus.Error;
       snackBarService.instance.LoginStatusMessage("Login Error", Colors.red);
     }
+    notifyListeners();
   }
 }

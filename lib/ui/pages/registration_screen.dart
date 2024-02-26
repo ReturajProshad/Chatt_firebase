@@ -1,6 +1,8 @@
 import 'dart:io';
 
 import 'package:chatt/ui/provider/auth_provider.dart';
+import 'package:chatt/ui/services/DB_service.dart';
+import 'package:chatt/ui/services/cloudStorage_service.dart';
 import 'package:chatt/ui/services/media_services.dart';
 import 'package:chatt/ui/services/navigation_services.dart';
 import '../provider/auth_provider.dart';
@@ -20,7 +22,7 @@ class _registrationPageState extends State<registrationPage> {
   late double _deviceHeight;
   late double _deviceWidth;
   late GlobalKey<FormState> _formKey;
-  late XFile? _image = null;
+  late File? _image = null;
   AuthProvider? _auth;
   bool isImageSelected = false;
   @override
@@ -42,12 +44,13 @@ class _registrationPageState extends State<registrationPage> {
       backgroundColor: Theme.of(context).backgroundColor,
       body: SingleChildScrollView(
           child: Container(
+        //color: Colors.red,
         alignment: Alignment.center,
         child: ChangeNotifierProvider.value(
           value: AuthProvider.instance,
           child: Column(children: [
             SizedBox(
-              height: _deviceHeight * .15,
+              height: _deviceHeight * .10,
             ),
             _registrationPageUI(),
           ]),
@@ -60,7 +63,8 @@ class _registrationPageState extends State<registrationPage> {
     return Builder(builder: (_context) {
       _auth = Provider.of<AuthProvider>(_context);
       return Container(
-        height: _deviceHeight * 0.75,
+        // color: Colors.red,
+        height: _deviceHeight * 0.85,
         padding: EdgeInsets.symmetric(horizontal: _deviceWidth * .10),
         // color: Colors.red,
         child: Column(
@@ -101,7 +105,8 @@ class _registrationPageState extends State<registrationPage> {
 
   Widget _inputForm() {
     return Container(
-      height: _deviceHeight * 0.40,
+      //color: Colors.red,
+      height: _deviceHeight * 0.50,
       child: Form(
         key: _formKey,
         onChanged: () {
@@ -125,7 +130,7 @@ class _registrationPageState extends State<registrationPage> {
   Widget _imageSelector() {
     return GestureDetector(
       onTap: () async {
-        XFile? _imageSelect = await mediaServices.instance.getImageFromFile();
+        File? _imageSelect = await mediaServices.instance.getImageFromFile();
         setState(() {
           _image = _imageSelect;
         });
@@ -145,7 +150,7 @@ class _registrationPageState extends State<registrationPage> {
                       File(_image!.path),
                     ),
                   )
-                : DecorationImage(
+                : const DecorationImage(
                     fit: BoxFit.cover,
                     image: NetworkImage(
                         "https://cdn.vectorstock.com/i/1000x1000/17/61/select-image-vector-11591761.webp"),
@@ -226,20 +231,35 @@ class _registrationPageState extends State<registrationPage> {
   }
 
   Widget _registerButton() {
-    return Container(
-      height: _deviceHeight * .06,
-      width: _deviceWidth,
-      child: MaterialButton(
-        onPressed: () {
-          //setState(() {});
-        },
-        color: Colors.blue,
-        child: const Text(
-          "Register",
-          style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
-        ),
-      ),
-    );
+    return _auth?.status != AuthStatus.Authenticating
+        ? Container(
+            height: _deviceHeight * .06,
+            width: _deviceWidth,
+            child: MaterialButton(
+              onPressed: () async {
+                if (_formKey.currentState!.validate() && _image != null) {
+                  _auth?.registerWithE_P(_email, _password,
+                      (String _uId) async {
+                    var _result = await CloudStorageService.instance
+                        .uploadUserImage(_uId, _image!);
+                    var _imageUrl = await _result?.ref.getDownloadURL();
+                    await dbService.instance
+                        .createUser(_uId, _name, _imageUrl!, _email);
+                  });
+                }
+                //setState(() {});
+              },
+              color: Colors.blue,
+              child: const Text(
+                "Register",
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
+              ),
+            ),
+          )
+        : const Align(
+            alignment: Alignment.center,
+            child: CircularProgressIndicator(),
+          );
   }
 
   Widget _backToLogin() {
