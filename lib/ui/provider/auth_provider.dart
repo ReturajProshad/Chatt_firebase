@@ -1,4 +1,5 @@
 // ignore_for_file: constant_identifier_names
+import 'package:chatt/ui/services/navigation_services.dart';
 import 'package:chatt/ui/services/snackBar_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -42,5 +43,26 @@ class AuthProvider extends ChangeNotifier {
       //display Error
     }
     notifyListeners();
+  }
+
+  Future<void>? registerWithE_P(
+      String _email, String _pass, Future<void> onSuccess(String _uId)) async {
+    status = AuthStatus.Authenticating;
+    notifyListeners();
+    try {
+      UserCredential _result = await _auth.createUserWithEmailAndPassword(
+          email: _email, password: _pass);
+      status = AuthStatus.Authenticated;
+      user = _result.user;
+      await onSuccess(user!.uid);
+      snackBarService.instance.LoginStatusMessage(
+          "successfully register as ${user?.email}", Colors.green);
+      //update lastseen time
+      navigationService.instance.goBack();
+      //navigate to homescreen
+    } catch (e) {
+      print(e);
+      snackBarService.instance.LoginStatusMessage("Login Error", Colors.red);
+    }
   }
 }

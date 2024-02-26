@@ -1,10 +1,12 @@
 import 'dart:io';
 
+import 'package:chatt/ui/provider/auth_provider.dart';
 import 'package:chatt/ui/services/media_services.dart';
 import 'package:chatt/ui/services/navigation_services.dart';
+import '../provider/auth_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:provider/provider.dart';
 
 class registrationPage extends StatefulWidget {
   const registrationPage({super.key});
@@ -19,6 +21,7 @@ class _registrationPageState extends State<registrationPage> {
   late double _deviceWidth;
   late GlobalKey<FormState> _formKey;
   late XFile? _image = null;
+  AuthProvider? _auth;
   bool isImageSelected = false;
   @override
   void initState() {
@@ -38,8 +41,10 @@ class _registrationPageState extends State<registrationPage> {
     return Scaffold(
       backgroundColor: Theme.of(context).backgroundColor,
       body: SingleChildScrollView(
-        child: Container(
-          alignment: Alignment.center,
+          child: Container(
+        alignment: Alignment.center,
+        child: ChangeNotifierProvider.value(
+          value: AuthProvider.instance,
           child: Column(children: [
             SizedBox(
               height: _deviceHeight * .15,
@@ -47,27 +52,30 @@ class _registrationPageState extends State<registrationPage> {
             _registrationPageUI(),
           ]),
         ),
-      ),
+      )),
     );
   }
 
   Widget _registrationPageUI() {
-    return Container(
-      height: _deviceHeight * 0.75,
-      padding: EdgeInsets.symmetric(horizontal: _deviceWidth * .10),
-      // color: Colors.red,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        mainAxisSize: MainAxisSize.max,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          _headingWidget(),
-          _inputForm(),
-          _registerButton(),
-          _backToLogin(),
-        ],
-      ),
-    );
+    return Builder(builder: (_context) {
+      _auth = Provider.of<AuthProvider>(_context);
+      return Container(
+        height: _deviceHeight * 0.75,
+        padding: EdgeInsets.symmetric(horizontal: _deviceWidth * .10),
+        // color: Colors.red,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          mainAxisSize: MainAxisSize.max,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _headingWidget(),
+            _inputForm(),
+            _registerButton(),
+            _backToLogin(),
+          ],
+        ),
+      );
+    });
   }
 
   Widget _headingWidget() {
