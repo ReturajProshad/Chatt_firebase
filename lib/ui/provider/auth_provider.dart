@@ -35,9 +35,10 @@ class AuthProvider extends ChangeNotifier {
       snackBarService.instance
           .LoginStatusMessage("Welcome ${user?.email}", Colors.green);
       //print('success login');
-      //navigate to homepage
+      navigationService.instance.navigatorRepalacement('home');
     } catch (e) {
       status = AuthStatus.Error;
+      user = null;
       snackBarService.instance.LoginStatusMessage("Login Error", Colors.red);
       //print('faild login');
       //display Error
@@ -58,10 +59,11 @@ class AuthProvider extends ChangeNotifier {
       snackBarService.instance.LoginStatusMessage(
           "successfully register as ${user?.email}", Colors.green);
       //update lastseen time
-      navigationService.instance.goBack();
-      //navigate to homescreen
+      //navigationService.instance.goBack();
+      navigationService.instance.navigatorRepalacement('home');
     } catch (e) {
-      print(e);
+      //print(e);
+      user = null;
       status = AuthStatus.Error;
       snackBarService.instance.LoginStatusMessage("Login Error", Colors.red);
     }

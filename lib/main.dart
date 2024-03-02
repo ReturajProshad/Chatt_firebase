@@ -1,6 +1,6 @@
+import 'package:chatt/ui/pages/home_page.dart';
 import 'package:chatt/ui/pages/login_screen.dart';
 import 'package:chatt/ui/pages/registration_screen.dart';
-import 'package:chatt/ui/services/DB_service.dart';
 import 'package:chatt/ui/services/navigation_services.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -33,6 +33,7 @@ class MyApp extends StatelessWidget {
       routes: {
         "login": (BuildContext _context) => loginpage(),
         "register": (BuildContext _context) => registrationPage(),
+        "home": (BuildContext _context) => homePage(),
       },
     );
   }

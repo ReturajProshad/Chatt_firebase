@@ -5,9 +5,7 @@ import 'package:chatt/ui/services/DB_service.dart';
 import 'package:chatt/ui/services/cloudStorage_service.dart';
 import 'package:chatt/ui/services/media_services.dart';
 import 'package:chatt/ui/services/navigation_services.dart';
-import '../provider/auth_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 
 class registrationPage extends StatefulWidget {
