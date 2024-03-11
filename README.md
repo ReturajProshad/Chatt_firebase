@@ -1,6 +1,11 @@
 # Chatting App
 
 A new Flutter project.
-<h1>I'm Still Working on it</h1>
-![chat 1](https://github.com/ReturajProshad/Chatt_firebase/assets/130851471/b9511b88-529e-4e87-9356-0527cb080b25)
-![chat 2](https://github.com/ReturajProshad/Chatt_firebase/assets/130851471/a581230c-c9dc-4e40-a822-05163f934404)
+<h1>I'm Still Working on this app</h1>
+
+
+![chat 1](https://github.com/ReturajProshad/Chatt_firebase/assets/130851471/1fdd31a0-369f-46a2-ba28-624215b4dfad)
+
+
+![chat 2](https://github.com/ReturajProshad/Chatt_firebase/assets/130851471/7bc24bc8-5ca4-4fcf-98f2-0372c3ffe483)
+
