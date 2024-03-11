@@ -3,6 +3,7 @@ import 'package:chatt/ui/services/navigation_services.dart';
 import 'package:chatt/ui/services/snackBar_service.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import '../../firebaseFunction/messageCreated.dart';
 import '../provider/auth_provider.dart';
 
 class loginpage extends StatefulWidget {
@@ -145,8 +146,8 @@ class _loginpageState extends State<loginpage> {
               onPressed: () {
                 _Email = _emailController.text;
                 _Password = _passWordController.text;
-                print(_Email);
-                print(_Password);
+                // print(_Email);
+                // print(_Password);
                 if (verifyEmail(_Email) && varifyPass(_Password)) {
                   _auth.loginWithE_P(_Email, _Password);
                 } else {
@@ -168,6 +169,13 @@ class _loginpageState extends State<loginpage> {
   Widget _registerButton() {
     return GestureDetector(
       onTap: () {
+        // MessageCreateService.instance.onConversationCreated(
+        // ["C6OgUhWd1gQXGedz4G6GObeG5s82", "NaxoPFHla4RD3nPNb74zh7cwsyT2"]);
+        MessageCreateService.instance.onMessageUpdate(
+            "C6OgUhWd1gQXGedz4G6GObeG5s82",
+            "NaxoPFHla4RD3nPNb74zh7cwsyT2",
+            "TXT",
+            "Hi this is final message");
         navigationService.instance.navigateToPage("register");
       },
       child: Container(
