@@ -1,4 +1,3 @@
-import 'package:chatt/firebaseFunction/messageCreated.dart';
 import 'package:chatt/ui/pages/home_page.dart';
 import 'package:chatt/ui/pages/login_screen.dart';
 import 'package:chatt/ui/pages/registration_screen.dart';

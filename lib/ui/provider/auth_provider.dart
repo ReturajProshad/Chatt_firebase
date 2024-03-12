@@ -22,6 +22,20 @@ class AuthProvider extends ChangeNotifier {
     user = _auth.currentUser;
     status =
         user != null ? AuthStatus.Authenticated : AuthStatus.NotAuthenticated;
+    _checkCurrentUserAuthenticated();
+  }
+  void _autoLogin() {
+    if (user != null) {
+      navigationService.instance.navigatorRepalacement('home');
+    }
+  }
+
+  void _checkCurrentUserAuthenticated() async {
+    user = await _auth.currentUser;
+    if (user != null) {
+      notifyListeners();
+      _autoLogin();
+    }
   }
 
   Future<void> loginWithE_P(String _Email, String _Password) async {
