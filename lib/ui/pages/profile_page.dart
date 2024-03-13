@@ -1,34 +1,52 @@
-import 'dart:ffi';
-
+import 'package:chatt/ui/services/DB_service.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:provider/provider.dart';
+import '../provider/auth_provider.dart';
 
 class profilePage extends StatelessWidget {
-  late double _height;
-  late double _width;
+  late final double _height;
+  late final double _width;
   profilePage(this._height, this._width);
 
   @override
   Widget build(BuildContext context) {
-    return Container(child: _profilePageUi());
+    return ChangeNotifierProvider.value(
+        value: AuthProvider.instance,
+        child: Container(child: _profilePageUi()));
   }
 
   Widget _profilePageUi() {
-    return Align(
-      child: SizedBox(
-        height: _height * .60,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisSize: MainAxisSize.max,
-          children: [
-            _userProfileImage(
-                "https://media.istockphoto.com/id/1457441464/photo/luxury-private-jet.jpg?s=1024x1024&w=is&k=20&c=4fiFgC-LJWWiIVdqc1JII4rvQsY3P_2xPCWKHFFX62I="),
-            _userName("Returaj"),
-            _userEmail("Returaj@gmail.com"),
-            _logoutButton()
-          ],
-        ),
-      ),
+    return Builder(
+      builder: (_context) {
+        var _auth = Provider.of<AuthProvider>(_context);
+        return StreamBuilder(
+            stream: dbService.instance.getuserdata(_auth.user!.uid),
+            builder: (_context, _snapshot) {
+              var _userData = _snapshot.data;
+              return _snapshot.hasData
+                  ? Align(
+                      child: SizedBox(
+                        height: _height * .60,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisSize: MainAxisSize.max,
+                          children: [
+                            _userProfileImage(_userData!.image),
+                            _userName(_userData.name),
+                            _userEmail(_userData.email),
+                            _logoutButton()
+                          ],
+                        ),
+                      ),
+                    )
+                  : SpinKitSpinningLines(
+                      color: Colors.blue,
+                      size: _width * .60,
+                    );
+            });
+      },
     );
   }
 

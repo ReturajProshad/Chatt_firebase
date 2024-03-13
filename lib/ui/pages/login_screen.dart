@@ -171,11 +171,11 @@ class _loginpageState extends State<loginpage> {
       onTap: () {
         // MessageCreateService.instance.onConversationCreated(
         // ["C6OgUhWd1gQXGedz4G6GObeG5s82", "NaxoPFHla4RD3nPNb74zh7cwsyT2"]);
-        MessageCreateService.instance.onMessageUpdate(
-            "C6OgUhWd1gQXGedz4G6GObeG5s82",
-            "NaxoPFHla4RD3nPNb74zh7cwsyT2",
-            "TXT",
-            "Hi this is final message");
+        // MessageCreateService.instance.onMessageUpdate(
+        // "C6OgUhWd1gQXGedz4G6GObeG5s82",
+        // "NaxoPFHla4RD3nPNb74zh7cwsyT2",
+        // "TXT",
+        // "Hi this is final message");
         navigationService.instance.navigateToPage("register");
       },
       child: Container(
