@@ -1,4 +1,6 @@
 import 'package:chatt/ui/services/DB_service.dart';
+import 'package:chatt/ui/services/navigation_services.dart';
+import 'package:chatt/ui/services/snackBar_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
@@ -8,7 +10,7 @@ class profilePage extends StatelessWidget {
   late final double _height;
   late final double _width;
   profilePage(this._height, this._width);
-
+  late AuthProvider _auth;
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider.value(
@@ -19,11 +21,16 @@ class profilePage extends StatelessWidget {
   Widget _profilePageUi() {
     return Builder(
       builder: (_context) {
-        var _auth = Provider.of<AuthProvider>(_context);
+        _auth = Provider.of<AuthProvider>(_context);
         return StreamBuilder(
-            stream: dbService.instance.getuserdata(_auth.user!.uid),
+            stream: _auth.user != null
+                ? dbService.instance.getuserdata(_auth.user!.uid)
+                : null,
             builder: (_context, _snapshot) {
               var _userData = _snapshot.data;
+              if (_snapshot.hasError) {
+                navigationService.instance.navigatorRepalacement("login");
+              }
               return _snapshot.hasData
                   ? Align(
                       child: SizedBox(
@@ -90,7 +97,11 @@ class profilePage extends StatelessWidget {
         style: ElevatedButton.styleFrom(
           backgroundColor: Colors.red,
         ),
-        onPressed: () {},
+        onPressed: () {
+          AuthProvider.instance.logoutFunction();
+          // snackBarService.instance
+          // .LoginStatusMessage("Successfully Logged OUT", Colors.red);
+        },
         child: const Text(
           "LOGOUT",
           style: TextStyle(

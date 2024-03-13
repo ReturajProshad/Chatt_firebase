@@ -30,6 +30,22 @@ class AuthProvider extends ChangeNotifier {
     }
   }
 
+  Future<void> logoutFunction() async {
+    try {
+      await _auth.signOut();
+      user = null;
+      status = AuthStatus.NotAuthenticated;
+      // snackBarService.instance
+      // .LoginStatusMessage("Successfully Logged OUT", Colors.red);
+      navigationService.instance.navigatorRepalacement("login");
+    } catch (e) {
+      //snackBarService.instance
+      // .LoginStatusMessage(" Log OUT Faield", Colors.red);
+      print("Error logout $e");
+    }
+    notifyListeners();
+  }
+
   void _checkCurrentUserAuthenticated() async {
     user = await _auth.currentUser;
     if (user != null) {
