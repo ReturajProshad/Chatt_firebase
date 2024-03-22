@@ -1,5 +1,6 @@
 import 'package:chatt/ui/pages/profile_page.dart';
 import 'package:chatt/ui/pages/recent_conversation.dart.dart';
+import 'package:chatt/ui/pages/search_page.dart';
 import 'package:flutter/material.dart';
 
 class homePage extends StatefulWidget {
@@ -17,7 +18,6 @@ class _homePageState extends State<homePage>
   @override
   void initState() {
     _tabController = TabController(length: 3, vsync: this, initialIndex: 1);
-    // TODO: implement initState
     super.initState();
   }
 
@@ -66,7 +66,7 @@ class _homePageState extends State<homePage>
 
   Widget _tabPages() {
     return TabBarView(controller: _tabController, children: [
-      profilePage(_height, _width),
+      searchPage(_height, _width),
       recentConversation(_height, _width),
       profilePage(_height, _width),
     ]);
