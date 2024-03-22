@@ -1,6 +1,5 @@
 import 'package:chatt/ui/services/DB_service.dart';
 import 'package:chatt/ui/services/navigation_services.dart';
-import 'package:chatt/ui/services/snackBar_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
