@@ -1,3 +1,4 @@
+import 'package:chatt/firebaseFunction/activeStatusSender.dart';
 import 'package:chatt/ui/pages/profile_page.dart';
 import 'package:chatt/ui/pages/recent_conversation.dart.dart';
 import 'package:chatt/ui/pages/search_page.dart';
@@ -18,7 +19,13 @@ class _homePageState extends State<homePage>
   @override
   void initState() {
     _tabController = TabController(length: 3, vsync: this, initialIndex: 1);
+    IamActive.instance.startSendingData();
     super.initState();
+  }
+
+  void dispose() {
+    IamActive.instance.stopSendingData();
+    super.dispose();
   }
 
   @override

@@ -1,4 +1,5 @@
 // ignore_for_file: constant_identifier_names
+import 'package:chatt/firebaseFunction/activeStatusSender.dart';
 import 'package:chatt/ui/services/navigation_services.dart';
 import 'package:chatt/ui/services/snackBar_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -26,7 +27,7 @@ class AuthProvider extends ChangeNotifier {
   }
   void _autoLogin() {
     if (user != null) {
-      navigationService.instance.navigatorRepalacement('home');
+      gotoHome();
     }
   }
 
@@ -48,7 +49,7 @@ class AuthProvider extends ChangeNotifier {
 
   void _checkCurrentUserAuthenticated() async {
     user = await _auth.currentUser;
-    if (user != null) {
+    if (user != null && status == AuthStatus.Authenticated) {
       notifyListeners();
       _autoLogin();
     }
@@ -61,11 +62,13 @@ class AuthProvider extends ChangeNotifier {
       UserCredential _result = await _auth.signInWithEmailAndPassword(
           email: _Email, password: _Password);
       user = _result.user;
+
+      // print("User Id= " + IamActive.instance.userId);
       status = AuthStatus.Authenticated;
       snackBarService.instance
           .LoginStatusMessage("Welcome ${user?.email}", Colors.green);
       //print('success login');
-      navigationService.instance.navigatorRepalacement('home');
+      gotoHome();
     } catch (e) {
       status = AuthStatus.Error;
       user = null;
@@ -90,7 +93,7 @@ class AuthProvider extends ChangeNotifier {
           "successfully register as ${user?.email}", Colors.green);
       //update lastseen time
       //navigationService.instance.goBack();
-      navigationService.instance.navigatorRepalacement('home');
+      gotoHome();
     } catch (e) {
       //print(e);
       user = null;
@@ -98,5 +101,10 @@ class AuthProvider extends ChangeNotifier {
       snackBarService.instance.LoginStatusMessage("Login Error", Colors.red);
     }
     notifyListeners();
+  }
+
+  void gotoHome() {
+    IamActive.instance.userId = user!.uid;
+    navigationService.instance.navigatorRepalacement('home');
   }
 }

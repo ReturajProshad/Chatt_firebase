@@ -41,4 +41,16 @@ class dbService {
       }).toList(); // Return a list of mapped Conversations
     });
   }
+
+  Stream<List<Contact>> userSearchList(String _Search) {
+    var ref = _db
+        ?.collection(userCollection)
+        .where("name", isGreaterThanOrEqualTo: _Search)
+        .where("name", isLessThan: _Search + 'z');
+    return ref!.get().asStream().map((_snapshot) {
+      return _snapshot.docs.map((_doc) {
+        return Contact.fromFirestore(_doc);
+      }).toList();
+    });
+  }
 }
