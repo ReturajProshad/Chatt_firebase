@@ -1,6 +1,8 @@
 import 'package:chatt/models/conversation_model.dart';
+import 'package:chatt/ui/pages/conversation_page.dart';
 import 'package:chatt/ui/provider/auth_provider.dart';
 import 'package:chatt/ui/services/DB_service.dart';
+import 'package:chatt/ui/services/navigation_services.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -39,7 +41,19 @@ class recentConversation extends StatelessWidget {
                       itemCount: _data.length,
                       itemBuilder: (_context, index) {
                         return ListTile(
-                          onTap: () {},
+                          onTap: () {
+                            navigationService.instance.navigateToRoute(
+                              MaterialPageRoute(
+                                builder: (context) {
+                                  return converSation(
+                                      _data[index].conversationID,
+                                      _data[index].id,
+                                      _data[index].name,
+                                      _data[index].image);
+                                },
+                              ),
+                            );
+                          },
                           title: Text(
                             _data[index].name,
                             style: TextStyle(fontSize: 20),
