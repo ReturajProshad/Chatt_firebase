@@ -5,6 +5,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
 import '../provider/auth_provider.dart';
 
+// ignore: must_be_immutable
 class profilePage extends StatelessWidget {
   late final double _height;
   late final double _width;
