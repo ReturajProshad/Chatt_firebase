@@ -31,21 +31,25 @@ class recentConversation extends StatelessWidget {
           builder: (_context, _snapshot) {
             if (_snapshot.hasData) {
               var _data = _snapshot.data!;
-              return ListView.builder(
-                itemCount: _data.length,
-                itemBuilder: (_context, index) {
-                  return ListTile(
-                    onTap: () {},
-                    title: Text(
-                      _data[index].name,
-                      style: TextStyle(fontSize: 20),
-                    ),
-                    subtitle: Text(_data[index].lastmessage),
-                    leading: _avaterImage(_data[index].image),
-                    trailing: _trailingList(_data[index].timestamp),
-                  );
-                },
-              );
+              return _data.length == 0
+                  ? Center(
+                      child: Text("Hey.. There Is No Conversation Yet..!!"),
+                    )
+                  : ListView.builder(
+                      itemCount: _data.length,
+                      itemBuilder: (_context, index) {
+                        return ListTile(
+                          onTap: () {},
+                          title: Text(
+                            _data[index].name,
+                            style: TextStyle(fontSize: 20),
+                          ),
+                          subtitle: Text(_data[index].lastmessage),
+                          leading: _avaterImage(_data[index].image),
+                          trailing: _trailingList(_data[index].timestamp),
+                        );
+                      },
+                    );
             } else if (_snapshot.hasError) {
               return Text('Error: ${_snapshot.error}');
             } else {

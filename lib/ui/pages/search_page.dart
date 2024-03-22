@@ -29,6 +29,8 @@ class _searchPageState extends State<searchPage> {
   @override
   Widget build(BuildContext context) {
     return Container(
+      height: widget._height,
+      width: widget._width,
       child: ChangeNotifierProvider<AuthProvider>.value(
         value: AuthProvider.instance,
         child: _searchPageUI(),
@@ -39,14 +41,16 @@ class _searchPageState extends State<searchPage> {
   Widget _searchPageUI() {
     return Builder(builder: (context) {
       _auth = Provider.of<AuthProvider>(context);
-      return Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        mainAxisSize: MainAxisSize.max,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          _searchBar(),
-          _userList(),
-        ],
+      return SingleChildScrollView(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          mainAxisSize: MainAxisSize.max,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            _searchBar(),
+            _userList(),
+          ],
+        ),
       );
     });
   }
@@ -59,6 +63,14 @@ class _searchPageState extends State<searchPage> {
       child: TextField(
         autocorrect: false,
         style: TextStyle(color: Colors.white),
+        onChanged: (_input) {
+          if (_input.isEmpty) {
+            _searchText = "";
+          } else {
+            _searchText = _input;
+          }
+          setState(() {});
+        },
         onSubmitted: (_input) {
           _searchText = _input;
         },
