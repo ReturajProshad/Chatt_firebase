@@ -53,4 +53,9 @@ class dbService {
       }).toList();
     });
   }
+
+  Stream getmessages(String _convId) {
+    var ref = _db?.collection(_convCollection).doc(_convId);
+    return ref!.snapshots();
+  }
 }
