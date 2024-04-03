@@ -3,9 +3,13 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 enum messageType { text, media }
 
 class message {
-  final String _message;
-  final String _senderId;
-  final Timestamp _timestamp;
-  final messageType _type;
-  message(this._message, this._senderId, this._timestamp, this._type);
+  final String content;
+  final String senderId;
+  final Timestamp timestamp;
+  final messageType type;
+  message(
+      {required this.content,
+      required this.senderId,
+      required this.timestamp,
+      required this.type});
 }

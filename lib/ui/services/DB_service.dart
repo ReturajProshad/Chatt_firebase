@@ -32,16 +32,6 @@ class dbService {
     });
   }
 
-  Stream<List<Conversations>> getConversations(String uId) {
-    var ref =
-        _db?.collection(userCollection).doc(uId).collection(_convCollection);
-    return ref!.snapshots().map((_snapshot) {
-      return _snapshot.docs.map((_doc) {
-        return Conversations.fromFirestore(_doc);
-      }).toList(); // Return a list of mapped Conversations
-    });
-  }
-
   Stream<List<Contact>> userSearchList(String _Search) {
     var ref = _db
         ?.collection(userCollection)
@@ -54,8 +44,21 @@ class dbService {
     });
   }
 
+  Stream<List<Conversations>> getConversations(String uId) {
+    var ref =
+        _db?.collection(userCollection).doc(uId).collection(_convCollection);
+    return ref!.snapshots().map((_snapshot) {
+      return _snapshot.docs.map((_doc) {
+        return Conversations.fromFirestore(_doc);
+      }).toList(); // Return a list of mapped Conversations
+    });
+  }
+
   Stream getmessages(String _convId) {
     var ref = _db?.collection(_convCollection).doc(_convId);
-    return ref!.snapshots();
+    print("ref=${ref?.snapshots}");
+    return ref!.snapshots().map((_snapshot) {
+      return conversationMessage.fromFirestore(_snapshot);
+    });
   }
 }

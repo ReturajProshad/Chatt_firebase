@@ -1,4 +1,10 @@
+import 'package:chatt/firebaseFunction/activeStatusSender.dart';
+import 'package:chatt/models/message_model.dart';
+import 'package:chatt/ui/services/DB_service.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class converSation extends StatefulWidget {
   String ConvId;
@@ -43,12 +49,43 @@ class _converSationState extends State<converSation> {
     return Container(
       height: _height * 0.75,
       width: _width,
-      child: ListView.builder(
-        itemCount: 1,
-        itemBuilder: (BuildContext _context, int index) {
-          return _textBubble(true, "HI");
-        },
-      ),
+      child: StreamBuilder(
+          stream: dbService.instance.getmessages(widget.ConvId),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return CircularProgressIndicator();
+            }
+            if (snapshot.hasError) {
+              return Text('Error: ${snapshot.error}');
+            }
+            var conversationData = snapshot.data;
+            // print("id = ${widget.ConvId}");
+            // print("Type of StreamBuilder: ${snapshot.runtimeType}");
+            // print("Type of datta: ${snapshot.data}");
+            // print("conv data= $conversationData");
+            if (conversationData != null) {
+              return ListView.builder(
+                itemCount: conversationData.messages != null
+                    ? conversationData.messages!.length
+                    : 0,
+                itemBuilder: (BuildContext _context, int index) {
+                  var message = conversationData.messages![index];
+                  String messageContent = message.content;
+                  String senderId = message.senderId;
+                  Timestamp timestamp = message.timestamp;
+                  messageType type = message.type;
+                  String accountHolder = IamActive.instance.userId;
+                  bool isOK = false;
+                  if (senderId == accountHolder) {
+                    isOK = true;
+                  }
+                  return _textBubble(isOK, messageContent);
+                },
+              );
+            } else {
+              return Text('No data available');
+            }
+          }),
     );
   }
 

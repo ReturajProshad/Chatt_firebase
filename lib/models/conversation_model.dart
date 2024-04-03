@@ -35,23 +35,41 @@ class Conversations {
 class conversationMessage {
   final String id;
   final List<String> members;
-  final List<message> messages;
+  final List? messages;
   final String OwnerId;
-  conversationMessage(
-      {required this.id,
-      required this.members,
-      required this.OwnerId,
-      required this.messages});
-  // factory conversationMessage.fromFirestore(DocumentSnapshot snapshot) {
-  //   var data = snapshot.data()  as Map<String, dynamic>;
-  //   List _messageList=data["messages"];
-  //   // if(_messageList!=null)
-  //   // {
-  //   //   _messageList=_messageList.map((_m){
-  //   //     var _messageType=_m["type"]=="text" ? messageType.text :messageType.media;
-  //   //     return message(_message:_m["message"], _senderId:_m["senderId"], _timestamp, _type)
-  //   //   }).toList();
-  //   // }
-  //   return conversationMessage(id:snapshot.id, members:data["members"], OwnerId:data["owner"], messages:_messageList,)
-  // }
+  conversationMessage({
+    required this.id,
+    required this.members,
+    required this.OwnerId,
+    required this.messages,
+  });
+  factory conversationMessage.fromFirestore(DocumentSnapshot snapshot) {
+    var data = snapshot.data() as Map<String, dynamic>;
+
+    // Handling members array
+    List<String> members = List<String>.from(data["members"]);
+
+    // Handling messages array
+    List<Map<String, dynamic>>? _messageList =
+        List<Map<String, dynamic>>.from(data["messages"]);
+    List<message>? messages;
+    if (_messageList != null) {
+      messages = _messageList.map((_m) {
+        var _messageType =
+            _m["type"] == "text" ? messageType.text : messageType.media;
+        return message(
+            content: _m["message"],
+            senderId: _m["senderId"],
+            timestamp: _m["timestamp"],
+            type: _messageType);
+      }).toList();
+    }
+
+    return conversationMessage(
+      id: snapshot.id,
+      members: members,
+      OwnerId: data["owner"],
+      messages: messages,
+    );
+  }
 }
