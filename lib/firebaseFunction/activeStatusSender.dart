@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class IamActive {
   static IamActive instance = IamActive();
   FirebaseFirestore _db = FirebaseFirestore.instance;
+  //uId updated from gotohome function in auth provider
   late String userId;
 
   Future<void> updateLastSeen(String uId) async {
