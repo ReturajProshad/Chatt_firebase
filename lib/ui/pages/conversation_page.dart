@@ -1,5 +1,6 @@
 // ignore_for_file: camel_case_types, non_constant_identifier_names
 
+import 'package:chatt/firebaseFunction/messageCreated.dart';
 import 'package:chatt/ui/provider/auth_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -29,8 +30,21 @@ class _converSationState extends State<converSation> {
   late double _height;
   late double _width;
   late AuthProvider _auth;
+  GlobalKey<FormState>? _formkey;
+  String? _messageTextForSend;
+
+  @override
+  void initState() {
+    _formkey = GlobalKey<FormState>();
+    _messageTextForSend = "";
+    // TODO: implement initState
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
+    print(_messageTextForSend);
+
     _height = MediaQuery.of(context).size.height;
 
     _width = MediaQuery.of(context).size.width;
@@ -55,6 +69,9 @@ class _converSationState extends State<converSation> {
         return Stack(
           children: [
             _messageListView(),
+            Align(
+                alignment: Alignment.bottomCenter,
+                child: _messageField(_context)),
           ],
         );
       },
@@ -169,6 +186,88 @@ class _converSationState extends State<converSation> {
             style: const TextStyle(color: Colors.white70),
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _messageField(BuildContext _context) {
+    return Container(
+      height: _height * 0.08,
+      decoration: BoxDecoration(
+        color: Color.fromRGBO(43, 43, 43, 1),
+        borderRadius: BorderRadius.circular(100),
+      ),
+      margin: EdgeInsets.symmetric(
+          horizontal: _width * 0.04, vertical: _height * 0.03),
+      child: Form(
+        key: _formkey,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisSize: MainAxisSize.max,
+          children: [
+            _messageTextField(),
+            _messageSendIcon(_context),
+            _imageMessageButton(),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _messageTextField() {
+    return SizedBox(
+      width: _width * 0.55,
+      child: TextFormField(
+        validator: (_input) {
+          if (_input!.length == 0) {
+            return "Please Enter a message";
+          }
+          return null;
+        },
+        onChanged: (_input) {
+          _formkey!.currentState?.save();
+        },
+        onSaved: (_input) {
+          _messageTextForSend = _input;
+        },
+        cursorColor: Colors.white,
+        decoration: InputDecoration(
+            border: InputBorder.none, hintText: "Type a message"),
+        autocorrect: false,
+      ),
+    );
+  }
+
+  Widget _messageSendIcon(BuildContext _context) {
+    return SizedBox(
+      height: _height * 0.05,
+      width: _width * 0.08,
+      child: IconButton(
+        icon: Icon(
+          Icons.send,
+          color: Colors.white,
+        ),
+        onPressed: () {
+          MessageCreateService.instance.onMessageUpdate(
+              _auth.user!.uid, widget.ReceiverId, "text", _messageTextForSend!);
+          _messageTextForSend = "";
+          _formkey?.currentState!.reset();
+        },
+      ),
+    );
+  }
+
+  Widget _imageMessageButton() {
+    return Container(
+      //
+      height: _height * 0.05,
+      width: _width * 0.09,
+      child: FloatingActionButton(
+        onPressed: () {},
+        child: const Icon(
+          Icons.camera_enhance,
+        ),
       ),
     );
   }
