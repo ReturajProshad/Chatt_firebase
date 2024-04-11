@@ -2,6 +2,8 @@
 
 import 'package:chatt/firebaseFunction/messageCreated.dart';
 import 'package:chatt/ui/provider/auth_provider.dart';
+import 'package:chatt/ui/services/cloudStorage_service.dart';
+import 'package:chatt/ui/services/media_services.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -118,7 +120,7 @@ class _converSationState extends State<converSation> {
                     isOwnOk = true;
                   }
                   return _messageListViewChild(
-                      isOwnOk, messageContent, timestamp);
+                      isOwnOk, messageContent, timestamp, type);
                 },
               );
             } else {
@@ -128,8 +130,8 @@ class _converSationState extends State<converSation> {
     );
   }
 
-  Widget _messageListViewChild(
-      bool isOwnOk, String messageContent, Timestamp timestamp) {
+  Widget _messageListViewChild(bool isOwnOk, String messageContent,
+      Timestamp timestamp, messageType type) {
     return Padding(
         padding: EdgeInsets.only(bottom: 10),
         child: Row(
@@ -139,7 +141,9 @@ class _converSationState extends State<converSation> {
           mainAxisSize: MainAxisSize.max,
           children: [
             !isOwnOk ? _userImage() : SizedBox(),
-            _textBubble(isOwnOk, messageContent, timestamp),
+            type == messageType.text
+                ? _textBubble(isOwnOk, messageContent, timestamp)
+                : _imageMessageBuble(isOwnOk, messageContent, timestamp),
           ],
         ));
   }
@@ -163,7 +167,7 @@ class _converSationState extends State<converSation> {
             const Color.fromRGBO(43, 43, 43, 1),
           ];
     return Container(
-      height: _height * 0.10,
+      height: _height * 0.10 + (_messageTextForSend!.length / 20 * 5.0),
       width: _width * 0.75,
       padding: const EdgeInsets.symmetric(horizontal: 10),
       decoration: BoxDecoration(
@@ -181,6 +185,53 @@ class _converSationState extends State<converSation> {
         mainAxisSize: MainAxisSize.max,
         children: [
           Text(_currentMessage),
+          Text(
+            timeago.format(_sendingtime.toDate()),
+            style: const TextStyle(color: Colors.white70),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _imageMessageBuble(
+      bool isOwnMessage, String _imageUrl, Timestamp _sendingtime) {
+    List<Color> _colorScheme = isOwnMessage
+        ? [
+            Colors.blue,
+            const Color.fromRGBO(42, 117, 188, 1),
+          ]
+        : [
+            const Color.fromRGBO(69, 69, 69, 1),
+            const Color.fromRGBO(43, 43, 43, 1),
+          ];
+    return Container(
+      height: _height * 0.10 + (_imageUrl!.length / 20 * 5.0),
+      width: _width * 0.75,
+      padding: const EdgeInsets.symmetric(horizontal: 10),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(15),
+        gradient: LinearGradient(
+          colors: _colorScheme,
+          stops: const [.30, 70],
+          begin: Alignment.bottomLeft,
+          end: Alignment.topRight,
+        ),
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.max,
+        children: [
+          Container(
+            height: _height * .30,
+            width: _width * 0.40,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(20),
+              image: DecorationImage(
+                  image: NetworkImage(_imageUrl), fit: BoxFit.cover),
+            ),
+          ),
           Text(
             timeago.format(_sendingtime.toDate()),
             style: const TextStyle(color: Colors.white70),
@@ -244,7 +295,7 @@ class _converSationState extends State<converSation> {
       height: _height * 0.05,
       width: _width * 0.08,
       child: IconButton(
-        icon: Icon(
+        icon: const Icon(
           Icons.send,
           color: Colors.white,
         ),
@@ -253,6 +304,7 @@ class _converSationState extends State<converSation> {
               _auth.user!.uid, widget.ReceiverId, "text", _messageTextForSend!);
           _messageTextForSend = "";
           _formkey?.currentState!.reset();
+          FocusScope.of(_context).unfocus();
         },
       ),
     );
@@ -264,7 +316,16 @@ class _converSationState extends State<converSation> {
       height: _height * 0.05,
       width: _width * 0.09,
       child: FloatingActionButton(
-        onPressed: () {},
+        onPressed: () async {
+          var _image = await mediaServices.instance.getImageFromFile();
+          if (_image != null) {
+            var _result = await CloudStorageService.instance
+                .uploadMediaMessage(_auth.user!.uid, _image);
+            var _imageUrl = await _result!.ref.getDownloadURL();
+            await MessageCreateService.instance.onMessageUpdate(_auth.user!.uid,
+                widget.ReceiverId, messageType.media.toString(), _imageUrl);
+          }
+        },
         child: const Icon(
           Icons.camera_enhance,
         ),
