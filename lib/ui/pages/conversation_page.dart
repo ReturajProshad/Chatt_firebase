@@ -205,10 +205,10 @@ class _converSationState extends State<converSation> {
             const Color.fromRGBO(69, 69, 69, 1),
             const Color.fromRGBO(43, 43, 43, 1),
           ];
+    // DecorationImage _image =
+    //     DecorationImage(image: NetworkImage(_imageUrl), fit: BoxFit.cover);
     return Container(
-      height: _height * 0.10 + (_imageUrl!.length / 20 * 5.0),
-      width: _width * 0.75,
-      padding: const EdgeInsets.symmetric(horizontal: 10),
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(15),
         gradient: LinearGradient(
