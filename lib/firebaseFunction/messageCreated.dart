@@ -114,6 +114,7 @@ class MessageCreateService {
             .update({
           "lastmessage": message,
           "timestamp": DateTime.now().toUtc(),
+          "type": messageType
         });
 
         ///updating the value in receiver id
@@ -125,7 +126,8 @@ class MessageCreateService {
             .update({
           "lastmessage": message,
           "timestamp": DateTime.now().toUtc(),
-          "unseenCount": FieldValue.increment(1)
+          "unseenCount": FieldValue.increment(1),
+          "type": messageType
         });
       }
     } catch (e) {

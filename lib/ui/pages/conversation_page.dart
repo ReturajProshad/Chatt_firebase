@@ -110,7 +110,7 @@ class _converSationState extends State<converSation> {
                     _listViewController!.hasClients) {
                   _listViewController!.animateTo(
                     _listViewController!.position.maxScrollExtent,
-                    duration: Duration(milliseconds: 50),
+                    duration: Duration(milliseconds: 300),
                     curve: Curves.easeOut,
                   );
                 }

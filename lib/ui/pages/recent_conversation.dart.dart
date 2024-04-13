@@ -58,7 +58,9 @@ class recentConversation extends StatelessWidget {
                             _data[index].name,
                             style: TextStyle(fontSize: 20),
                           ),
-                          subtitle: Text(_data[index].lastmessage),
+                          subtitle: _data[index].type == "text"
+                              ? Text(_data[index].lastmessage)
+                              : Text("Attachment"),
                           leading: _avaterImage(_data[index].image),
                           trailing: _trailingList(_data[index].timestamp),
                         );
