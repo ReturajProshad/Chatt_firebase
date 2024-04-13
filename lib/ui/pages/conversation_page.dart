@@ -1,5 +1,7 @@
 // ignore_for_file: camel_case_types, non_constant_identifier_names
 
+import 'dart:async';
+
 import 'package:chatt/firebaseFunction/messageCreated.dart';
 import 'package:chatt/ui/provider/auth_provider.dart';
 import 'package:chatt/ui/services/cloudStorage_service.dart';
@@ -34,12 +36,13 @@ class _converSationState extends State<converSation> {
   late AuthProvider _auth;
   GlobalKey<FormState>? _formkey;
   String? _messageTextForSend;
-
+  ScrollController? _listViewController = ScrollController();
   @override
   void initState() {
     _formkey = GlobalKey<FormState>();
     _messageTextForSend = "";
     // TODO: implement initState
+    _listViewController = ScrollController();
     super.initState();
   }
 
@@ -102,7 +105,19 @@ class _converSationState extends State<converSation> {
             // print("Type of datta: ${snapshot.data}");
             // print("conv data= $conversationData");
             if (conversationData != null) {
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                if (_listViewController != null &&
+                    _listViewController!.hasClients) {
+                  _listViewController!.animateTo(
+                    _listViewController!.position.maxScrollExtent,
+                    duration: Duration(milliseconds: 50),
+                    curve: Curves.easeOut,
+                  );
+                }
+              });
+
               return ListView.builder(
+                controller: _listViewController,
                 padding:
                     const EdgeInsets.symmetric(vertical: 20, horizontal: 10),
                 itemCount: conversationData.messages != null
@@ -245,7 +260,7 @@ class _converSationState extends State<converSation> {
     return Container(
       height: _height * 0.08,
       decoration: BoxDecoration(
-        color: Color.fromRGBO(43, 43, 43, 1),
+        color: Color(0xFF2B2B2B),
         borderRadius: BorderRadius.circular(100),
       ),
       margin: EdgeInsets.symmetric(
@@ -302,6 +317,7 @@ class _converSationState extends State<converSation> {
         onPressed: () {
           MessageCreateService.instance.onMessageUpdate(
               _auth.user!.uid, widget.ReceiverId, "text", _messageTextForSend!);
+
           _messageTextForSend = "";
           _formkey?.currentState!.reset();
           FocusScope.of(_context).unfocus();
