@@ -3,8 +3,27 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class MessageCreateService {
   static MessageCreateService instance = MessageCreateService();
   FirebaseFirestore _db = FirebaseFirestore.instance;
+  Future<String> CheckConvIdAvailableorNot(List<String> members) async {
+    try {
+      if (members.isNotEmpty) {
+        DocumentSnapshot conversationDoc = await _db
+            .collection("Users")
+            .doc(members[0])
+            .collection("Conversations")
+            .doc(members[1])
+            .get();
+        if (conversationDoc.exists) return conversationDoc["conversationID"];
+        return "Null";
+      }
+    } catch (e) {
+      print(e);
+      return "Null";
+    }
+    return "Null";
+  }
 
-  Future<void> onConversationCreated(List<String> members) async {
+  Future<String> onConversationCreated(
+      List<String> members, String typeOfMessage, String sms) async {
     try {
       if (members.isNotEmpty) {
         DocumentSnapshot conversationDoc = await _db
@@ -14,13 +33,14 @@ class MessageCreateService {
             .doc(members[1])
             .get();
         // Generate an auto-generated conversation ID
-        if (!conversationDoc.exists) {
+        //  if (!conversationDoc.exists)
+        {
           DocumentReference conversationRef =
               _db.collection("Conversations").doc();
           String conversationID = conversationRef.id;
 
-          cCollectionCreate(members[0], members[1], "Text", "Hi Welcome",
-              conversationID, "time");
+          cCollectionCreate(
+              members[0], members[1], typeOfMessage, sms, conversationID);
           for (int i = 0; i < members.length; i++) {
             String currentUserID = members[i];
             List<String> remainingUserIDs =
@@ -46,15 +66,23 @@ class MessageCreateService {
               }
             }
           }
+          return conversationID;
         }
       }
+      return "Null";
     } catch (e) {
       print(e);
+      return "Null";
     }
   }
 
-  Future<void> cCollectionCreate(String ownerId, String receiverId,
-      String messageType, String message, String cId, String _lastseen) async {
+  Future<void> cCollectionCreate(
+    String ownerId,
+    String receiverId,
+    String messageType,
+    String message,
+    String cId /*,String _lastseen*/,
+  ) async {
     try {
       Map<String, dynamic> data = {
         "members": [ownerId, receiverId],

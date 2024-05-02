@@ -1,5 +1,9 @@
+import 'package:chatt/firebaseFunction/messageCreated.dart';
 import 'package:chatt/models/contact_model.dart';
+import 'package:chatt/ui/pages/conversation_page.dart';
 import 'package:chatt/ui/services/DB_service.dart';
+import 'package:chatt/ui/services/media_services.dart';
+import 'package:chatt/ui/services/navigation_services.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -112,7 +116,23 @@ class _searchPageState extends State<searchPage> {
                         ),
                       );
                   return ListTile(
-                    onTap: () {},
+                    onTap: () async {
+                      String ConvID = await MessageCreateService.instance
+                          .CheckConvIdAvailableorNot(
+                              [_auth.user!.uid, _data[_index].id]);
+                      var _receiverAll = _data[_index];
+                      navigationService.instance.navigateToRoute(
+                          MaterialPageRoute(builder: (context) {
+                        return converSation(
+                            ConvID,
+                            _receiverAll.id,
+                            _receiverAll.name,
+                            _receiverAll.image,
+                            "searchPage");
+                      }));
+                      // print(_data[_index].id);
+                      // print(ConvID);
+                    },
                     leading: _avaterImage(_data[_index].image),
                     title: Text(_data[_index].name),
                     trailing: _trailingList(_data[_index].lastSeen, isActive),

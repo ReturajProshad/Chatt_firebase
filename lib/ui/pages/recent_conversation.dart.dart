@@ -46,10 +46,12 @@ class recentConversation extends StatelessWidget {
                               MaterialPageRoute(
                                 builder: (context) {
                                   return converSation(
-                                      _data[index].conversationID,
-                                      _data[index].id,
-                                      _data[index].name,
-                                      _data[index].image);
+                                    _data[index].conversationID,
+                                    _data[index].id,
+                                    _data[index].name,
+                                    _data[index].image,
+                                    "recentConversation",
+                                  );
                                 },
                               ),
                             );

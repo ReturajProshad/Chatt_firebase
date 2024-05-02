@@ -6,8 +6,10 @@ import 'package:chatt/firebaseFunction/messageCreated.dart';
 import 'package:chatt/ui/provider/auth_provider.dart';
 import 'package:chatt/ui/services/cloudStorage_service.dart';
 import 'package:chatt/ui/services/media_services.dart';
+import 'package:chatt/ui/services/navigation_services.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:timeago/timeago.dart' as timeago;
 import 'package:provider/provider.dart';
@@ -22,8 +24,9 @@ class converSation extends StatefulWidget {
   String ReceiverId;
   String ReceiverName;
   String ReceiverImage;
-  converSation(
-      this.ConvId, this.ReceiverId, this.ReceiverName, this.ReceiverImage,
+  String FromWhichPageIcame;
+  converSation(this.ConvId, this.ReceiverId, this.ReceiverName,
+      this.ReceiverImage, this.FromWhichPageIcame,
       {super.key});
 
   @override
@@ -48,7 +51,7 @@ class _converSationState extends State<converSation> {
 
   @override
   Widget build(BuildContext context) {
-    print(_messageTextForSend);
+    // print(_messageTextForSend);
 
     _height = MediaQuery.of(context).size.height;
 
@@ -73,7 +76,13 @@ class _converSationState extends State<converSation> {
         _auth = Provider.of<AuthProvider>(_context);
         return Stack(
           children: [
-            _messageListView(),
+            widget.ConvId == "Null"
+                ? Container(
+                    height: _height * 0.75,
+                    width: _width,
+                    child: Center(child: Text("Lets Create a conversation")),
+                  )
+                : _messageListView(),
             Align(
                 alignment: Alignment.bottomCenter,
                 child: _messageField(_context)),
@@ -314,16 +323,46 @@ class _converSationState extends State<converSation> {
           Icons.send,
           color: Colors.white,
         ),
-        onPressed: () {
-          MessageCreateService.instance.onMessageUpdate(
-              _auth.user!.uid, widget.ReceiverId, "text", _messageTextForSend!);
-
-          _messageTextForSend = "";
-          _formkey?.currentState!.reset();
-          FocusScope.of(_context).unfocus();
+        onPressed: () async {
+          if (_formkey!.currentState?.validate() ?? false) {
+            if (widget.ConvId == "Null") {
+              await createAConvIdByTextMessage();
+            } else {
+              MessageCreateService.instance.onMessageUpdate(
+                _auth.user!.uid,
+                widget.ReceiverId,
+                "text",
+                _messageTextForSend!,
+              );
+            }
+            setState(() {
+              _messageTextForSend = ""; // Reset message text
+            });
+            _formkey?.currentState!.reset(); // Reset form
+            FocusScope.of(_context).unfocus();
+          }
         },
       ),
     );
+  }
+
+  Future<void> createAConvIdByTextMessage() async {
+    String convId = await MessageCreateService.instance.onConversationCreated(
+      [_auth.user!.uid, widget.ReceiverId],
+      "text",
+      _messageTextForSend!,
+    );
+    // print(convId);
+    Navigator.of(context)
+        .pushReplacement(MaterialPageRoute(builder: (BuildContext context) {
+      return converSation(
+        convId,
+        widget.ReceiverId,
+        widget.ReceiverName,
+        widget.ReceiverImage,
+        "ConvPage",
+      );
+    }));
   }
 
   Widget _imageMessageButton() {
@@ -333,19 +372,46 @@ class _converSationState extends State<converSation> {
       width: _width * 0.09,
       child: FloatingActionButton(
         onPressed: () async {
-          var _image = await mediaServices.instance.getImageFromFile();
-          if (_image != null) {
-            var _result = await CloudStorageService.instance
-                .uploadMediaMessage(_auth.user!.uid, _image);
-            var _imageUrl = await _result!.ref.getDownloadURL();
-            await MessageCreateService.instance.onMessageUpdate(_auth.user!.uid,
-                widget.ReceiverId, messageType.media.toString(), _imageUrl);
+          if (widget.ConvId == "Null") {
+            alertForNull();
+          } else {
+            var _image = await mediaServices.instance.getImageFromFile();
+            if (_image != null) {
+              var _result = await CloudStorageService.instance
+                  .uploadMediaMessage(_auth.user!.uid, _image);
+              var _imageUrl = await _result!.ref.getDownloadURL();
+              await MessageCreateService.instance.onMessageUpdate(
+                  _auth.user!.uid,
+                  widget.ReceiverId,
+                  messageType.media.toString(),
+                  _imageUrl);
+            }
           }
         },
         child: const Icon(
           Icons.camera_enhance,
         ),
       ),
+    );
+  }
+
+  void alertForNull() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text("You Are Not Connected"),
+          content: Text(
+              "You can't send media messages without sending a text message."),
+          actions: <Widget>[
+            ElevatedButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: Text("OK"))
+          ],
+        );
+      },
     );
   }
 }
