@@ -1,7 +1,7 @@
 # Chatting App
 
 A new Flutter project.
-<h1>I'm Still Working on this app</h1>
+<h1>Chatting App Using Firebase and Provider</h1>     
 
 
 ![chat 1](https://github.com/ReturajProshad/Chatt_firebase/assets/130851471/1fdd31a0-369f-46a2-ba28-624215b4dfad)
