@@ -1,11 +1,18 @@
 # Chatting App
 
 A new Flutter project.
-<h1>I'm Still Working on this app</h1>
+<h1>Chatting App Using Firebase and Provider</h1>     
 
 
 ![chat 1](https://github.com/ReturajProshad/Chatt_firebase/assets/130851471/1fdd31a0-369f-46a2-ba28-624215b4dfad)
 
 
 ![chat 2](https://github.com/ReturajProshad/Chatt_firebase/assets/130851471/7bc24bc8-5ca4-4fcf-98f2-0372c3ffe483)
+
+<h3>A Short Overview</h3>
+
+https://github.com/ReturajProshad/Chatt_firebase/assets/130851471/60fa29ad-8907-472e-905a-0c36132386a6
+
+
+
 
