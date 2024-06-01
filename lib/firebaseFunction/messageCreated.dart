@@ -61,7 +61,7 @@ class MessageCreateService {
                   "name": userData["name"],
                   "unseenCount": 0,
                   "timestamp": DateTime.now().toUtc(),
-                  "lastmessage": "last"
+                  "lastmessage": sms
                 });
               }
             }

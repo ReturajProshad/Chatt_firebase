@@ -5,6 +5,7 @@ import 'package:chatt/ui/services/DB_service.dart';
 import 'package:chatt/ui/services/cloudStorage_service.dart';
 import 'package:chatt/ui/services/media_services.dart';
 import 'package:chatt/ui/services/navigation_services.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -23,6 +24,7 @@ class _registrationPageState extends State<registrationPage> {
   late File? _image = null;
   AuthProvider? _auth;
   bool isImageSelected = false;
+  final Color _textandCursorColor = kIsWeb ? Colors.black : Colors.white;
   @override
   void initState() {
     _formKey = GlobalKey<FormState>();
@@ -139,7 +141,7 @@ class _registrationPageState extends State<registrationPage> {
           height: _deviceHeight * .10,
           width: _deviceHeight * .10,
           decoration: BoxDecoration(
-            color: Colors.transparent,
+            color: const Color.fromARGB(81, 0, 0, 0),
             borderRadius: BorderRadius.circular(1000),
             image: _image != null
                 ? DecorationImage(
@@ -162,7 +164,7 @@ class _registrationPageState extends State<registrationPage> {
   Widget _nameTextField() {
     return TextFormField(
       autocorrect: false,
-      style: TextStyle(color: Colors.white),
+      style: TextStyle(color: _textandCursorColor),
       validator: (_input) {
         return _input!.length != 0 ? null : "Please enter your name";
       },
@@ -171,11 +173,11 @@ class _registrationPageState extends State<registrationPage> {
           _name = _input!;
         });
       },
-      cursorColor: Colors.white,
-      decoration: const InputDecoration(
+      cursorColor: _textandCursorColor,
+      decoration: InputDecoration(
         hintText: "Enter Your Name",
         focusedBorder: UnderlineInputBorder(
-          borderSide: BorderSide(color: Colors.white),
+          borderSide: BorderSide(color: _textandCursorColor),
         ),
       ),
     );
@@ -184,7 +186,7 @@ class _registrationPageState extends State<registrationPage> {
   Widget _emailTextField() {
     return TextFormField(
       autocorrect: false,
-      style: TextStyle(color: Colors.white),
+      style: TextStyle(color: _textandCursorColor),
       validator: (_input) {
         return _input!.length != 0 && _input.contains('@')
             ? null
@@ -195,11 +197,11 @@ class _registrationPageState extends State<registrationPage> {
           _email = _input!;
         });
       },
-      cursorColor: Colors.white,
-      decoration: const InputDecoration(
+      cursorColor: _textandCursorColor,
+      decoration: InputDecoration(
         hintText: "Enter Your Email",
         focusedBorder: UnderlineInputBorder(
-          borderSide: BorderSide(color: Colors.white),
+          borderSide: BorderSide(color: _textandCursorColor),
         ),
       ),
     );
@@ -209,7 +211,7 @@ class _registrationPageState extends State<registrationPage> {
     return TextFormField(
       autocorrect: false,
       obscureText: true,
-      style: TextStyle(color: Colors.white),
+      style: TextStyle(color: _textandCursorColor),
       validator: (_input) {
         return _input!.length != 0 ? null : "Please enter a valid password";
       },
@@ -218,11 +220,11 @@ class _registrationPageState extends State<registrationPage> {
           _password = _input!;
         });
       },
-      cursorColor: Colors.white,
-      decoration: const InputDecoration(
+      cursorColor: _textandCursorColor,
+      decoration: InputDecoration(
         hintText: "Enter a password",
         focusedBorder: UnderlineInputBorder(
-          borderSide: BorderSide(color: Colors.white),
+          borderSide: BorderSide(color: _textandCursorColor),
         ),
       ),
     );

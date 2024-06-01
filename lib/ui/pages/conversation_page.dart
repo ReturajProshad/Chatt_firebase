@@ -6,10 +6,9 @@ import 'package:chatt/firebaseFunction/messageCreated.dart';
 import 'package:chatt/ui/provider/auth_provider.dart';
 import 'package:chatt/ui/services/cloudStorage_service.dart';
 import 'package:chatt/ui/services/media_services.dart';
-import 'package:chatt/ui/services/navigation_services.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:timeago/timeago.dart' as timeago;
 import 'package:provider/provider.dart';
@@ -59,7 +58,8 @@ class _converSationState extends State<converSation> {
     return Scaffold(
       backgroundColor: Theme.of(context).backgroundColor,
       appBar: AppBar(
-        backgroundColor: Color.fromRGBO(31, 31, 31, 1.0),
+        backgroundColor:
+            kIsWeb ? Colors.white : Color.fromRGBO(31, 31, 31, 1.0),
         title: Text(widget.ReceiverName),
         centerTitle: true,
       ),
@@ -190,6 +190,12 @@ class _converSationState extends State<converSation> {
             const Color.fromRGBO(69, 69, 69, 1),
             const Color.fromRGBO(43, 43, 43, 1),
           ];
+    if (kIsWeb && !isOwnMessage) {
+      _colorScheme = [
+        Color.fromARGB(240, 183, 159, 159),
+        Color.fromARGB(255, 249, 190, 190),
+      ];
+    }
     return Container(
       height: _height * 0.10 + (_messageTextForSend!.length / 20 * 5.0),
       width: _width * 0.75,
@@ -283,7 +289,7 @@ class _converSationState extends State<converSation> {
           children: [
             _messageTextField(),
             _messageSendIcon(_context),
-            _imageMessageButton(),
+            kIsWeb ? Container() : _imageMessageButton(),
           ],
         ),
       ),
@@ -306,9 +312,12 @@ class _converSationState extends State<converSation> {
         onSaved: (_input) {
           _messageTextForSend = _input;
         },
-        cursorColor: Colors.white,
-        decoration: InputDecoration(
-            border: InputBorder.none, hintText: "Type a message"),
+        cursorColor: kIsWeb ? Colors.black : Colors.white,
+        decoration: const InputDecoration(
+            border: InputBorder.none,
+            hintText: "Type a message",
+            fillColor: kIsWeb ? Color.fromARGB(255, 255, 255, 255) : null,
+            filled: kIsWeb),
         autocorrect: false,
       ),
     );

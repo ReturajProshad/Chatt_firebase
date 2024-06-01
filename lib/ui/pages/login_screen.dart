@@ -1,6 +1,7 @@
 // ignore_for_file: unused_field, non_constant_identifier_names
 import 'package:chatt/ui/services/navigation_services.dart';
 import 'package:chatt/ui/services/snackBar_service.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../firebaseFunction/messageCreated.dart';
@@ -21,6 +22,7 @@ class _loginpageState extends State<loginpage> {
   final TextEditingController _emailController = TextEditingController();
   late double _deviceHeight;
   late double _deviceWidth;
+  final Color _cursorColor = kIsWeb ? Colors.black : Colors.white;
   @override
   Widget build(BuildContext context) {
     _deviceHeight = MediaQuery.of(context).size.height;
@@ -105,7 +107,7 @@ class _loginpageState extends State<loginpage> {
             ? null
             : "Please enter a valid email";
       },
-      cursorColor: Colors.white,
+      cursorColor: _cursorColor,
       decoration: const InputDecoration(
         hintText: "Email Address",
         focusedBorder: UnderlineInputBorder(
@@ -123,7 +125,7 @@ class _loginpageState extends State<loginpage> {
       validator: (_input) {
         return _input!.length != 0 ? null : "Enter a password";
       },
-      cursorColor: Colors.white,
+      cursorColor: _cursorColor,
       decoration: const InputDecoration(
         hintText: "Enter The Password",
         focusedBorder: UnderlineInputBorder(
@@ -187,7 +189,7 @@ class _loginpageState extends State<loginpage> {
           style: TextStyle(
             fontSize: 17,
             fontWeight: FontWeight.w200,
-            color: Colors.white60,
+            color: kIsWeb ? Colors.black : Colors.white60,
           ),
         ),
       ),
